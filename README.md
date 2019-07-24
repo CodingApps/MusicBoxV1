@@ -1,51 +1,60 @@
-<h1 align="center"> Virtual Tourist </h1> <br>
+<h1 align="center"> Music Box </h1> <br>
 
-<h4 align="center"> View map showing pins, which uses Flickr's API to load images when selecting pin. </h4> <br>
+<h4 align="center">Load audio from RAW file, using Java MediaPlayer with adjustable scroll and button UI.</h4> <br>
  
 
 ## Intro
 
-This project allows you to view pins loaded on a map from CoreData. You'll be able to place pins, and then tap a pin to geographically load Flickr's API data for images at the location. 
+This plays audio from a file, which shows an updated playback meter scrolling left to right. The scroll bar can be adjusted to playback at any time within the song. Function called from the Java MediaPlayer. 
+
 <p align="center">
-  <img alt="onthemap" title="onthemap" src="screenshots/virtualt1.gif" width=300>
+  <img alt="musicbox" title="musicbox" src="http://androidflow.github.io/screens/mbox1b.gif" width=300>
 </p>
 <br>
 
 ## Functions 
 
-* Place pins on map which will save to CoreData.
-* API controllers to load Flickr image data geographically. 
-* Mapview controller to display pins. 
-* Storyboard with combined MapView and CollectionView.
+* Loading RAW audio file.
+* Adding scroll bar to allow adjusted play time. 
+* Displaying play time based on seconds playing and remaining. 
+
 <br>
 
-## Displaying images from CoreData
+## Updating Time on Scrollbar
 
-One of the areas in the app which made alot of use of CoreData was the CollectionView. It was interesting seeing how the CollectionView could simultaneously fill and refresh more than a dozen images concurrently.   
+While the MediaPlayer function played the audio, the Scrollbar would update for remaining seconds. It was interesting to see how the Scrollbar would adjust based on MediaPlayer.    
 
-``` swift
- func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
-    {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as! PhotoCell
-        cell.activityIndicator.isHidden = true
-        cell.imageView.image = nil
-        let photo = fetchedResultsController?.object(at: indexPath) as! Photo
-        if photo.imageData == nil{
-            cell.activityIndicator.isHidden = false
-            cell.imageView.image = UIImage(named: "defaultImage")
-            cell.activityIndicator.startAnimating()
-            DispatchQueue.main.async{
-                self.flickr.downloadPhotos(photo.url!){ (image, error) in
-                    photo.imageData = image
-                    cell.imageView.image = UIImage(data: image as! Data)
-                    cell.activityIndicator.isHidden = true
-                }
-            }
-        }else{
-            cell.imageView.image = UIImage(data: photo.imageData as! Data)
-        }
-        return cell
-    }
+``` java
+    public void updateThread() {
+
+        thread = new Thread() {
+            @Override
+            public void run() {
+
+                try {
+                    while (mediaPlayer != null && mediaPlayer.isPlaying()) {
+
+
+                        Thread.sleep(50);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                int newPosition = mediaPlayer.getCurrentPosition();
+                                int newMax = mediaPlayer.getDuration();
+                                seekbar.setMax(newMax);
+                                seekbar.setProgress(newPosition);
+
+                                //Update the text
+
+                                leftTime.setText(String.valueOf(new java.text.SimpleDateFormat("mm:ss").format(new Date(mediaPlayer.getCurrentPosition()))));
+
+                                rightTime.setText(String.valueOf(new java.text.SimpleDateFormat("mm:ss").format(new Date(mediaPlayer.getDuration() - mediaPlayer.getCurrentPosition()))));
+
+                            }
+
+                        });
+
+                    }
 ```
 <br>
 
