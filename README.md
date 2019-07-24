@@ -22,7 +22,7 @@ This plays audio from a file, which shows an updated playback meter scrolling le
 
 ## Updating Time on Scrollbar
 
-While the MediaPlayer function played the audio, the Scrollbar would update for remaining seconds. It was interesting to see how the Scrollbar would adjust based on MediaPlayer.    
+While the MediaPlayer function played the audio, the Scrollbar would move according remaining seconds. It was interesting to see how the Scrollbar adjusted from values input from MediaPlayer.    
 
 ``` java
     public void updateThread() {
@@ -57,9 +57,3 @@ While the MediaPlayer function played the audio, the Scrollbar would update for 
                     }
 ```
 <br>
-
-## Article Tips
-
-Some good articles for tips : <br>
-* <a href="https://www.yudiz.com/working-with-unwind-segues-in-swift" target="_blank">Working with Segue unwinds in Swift</a><br>
-* <a href="https://blog.supereasyapps.com/30-auto-layout-best-practices/#layout-ui-for-one-iphone" target="_blank">30 Auto Layout Best Practices</a>
